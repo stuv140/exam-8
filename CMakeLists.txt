@@ -26,13 +26,13 @@ target_link_libraries(bayan PRIVATE Boost::filesystem Boost::system)
 target_compile_options(bayan PRIVATE -Wall -Wextra -O2)
 
 # Тесты (опционально)
-#enable_testing()
-#add_executable(test_scan
- #   test/test_scan.cpp
-#    src/FileSystem.cpp
- #   src/FileProxy.cpp
-#    src/DirectoryScanner.cpp
-#)
+enable_testing()
+add_executable(test_scan
+    test/test_scan.cpp
+    src/FileSystem.cpp
+    src/FileProxy.cpp
+    src/DirectoryScanner.cpp
+)
 
 target_link_libraries(test_scan PRIVATE Boost::filesystem Boost::system)
 target_compile_options(test_scan PRIVATE -Wall -Wextra -g)
