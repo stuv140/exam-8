@@ -1,0 +1,50 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install Boost
+      run: sudo apt-get install -y libboost-all-dev
+    
+    - name: Build
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DBUILD_TESTS=OFF
+        make -j$(nproc)
+    
+    - name: Create archive with binary
+      run: |
+        mkdir -p release
+        cp build/bayan release/
+        cd release
+        tar -czvf bayan-linux-x86_64.tar.gz bayan
+        zip bayan-linux-x86_64.zip bayan
+    
+    - name: Create source archive
+      run: |
+        git archive --format=tar.gz --output=release/source-code.tar.gz HEAD
+        git archive --format=zip --output=release/source-code.zip HEAD
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          release/bayan-linux-x86_64.tar.gz
+          release/bayan-linux-x86_64.zip
+          release/source-code.tar.gz
+          release/source-code.zip
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
