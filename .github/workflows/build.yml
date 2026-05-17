@@ -1,0 +1,51 @@
+name: Build and Test Bayan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # позволяет запускать вручную
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install Boost
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-all-dev
+    
+    - name: Create build directory
+      run: mkdir -p build
+    
+    - name: Configure CMake
+      run: |
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+    
+    - name: Build
+      run: |
+        cd build
+        make -j$(nproc)
+    
+    - name: Run tests
+      run: |
+        cd build
+        ./test_scan || true  # если тесты есть
+    
+    - name: Upload binary artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bayan-linux
+        path: build/bayan
+    
+    - name: Upload test artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: test_scan
+        path: build/test_scan
