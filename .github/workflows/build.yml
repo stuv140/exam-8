@@ -43,10 +43,5 @@ jobs:
       with:
         name: bayan-linux
         path: build/bayan
-    
-    - name: Upload test artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: test_scan
-        path: build/test_scan
+   
 
