@@ -36,3 +36,28 @@ add_executable(test_scan
 
 target_link_libraries(test_scan PRIVATE Boost::filesystem Boost::system)
 target_compile_options(test_scan PRIVATE -Wall -Wextra -g)
+# Установка
+install(TARGETS bayan DESTINATION bin)
+install(FILES README.md DESTINATION .)
+install(DIRECTORY include/ DESTINATION include)
+
+# CPack для создания пакетов
+set(CPACK_PACKAGE_NAME "bayan")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Duplicate file finder utility")
+set(CPACK_PACKAGE_VENDOR "YourName")
+set(CPACK_PACKAGE_CONTACT "your@email.com")
+
+# Создаем архив исходников
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set(CPACK_SOURCE_IGNORE_FILES 
+    "\\\\.git/"
+    "build/"
+    "\\\\.idea/"
+    "\\\\.vscode/"
+    "*.o"
+    "bayan"
+    "test_scan"
+)
+
+include(CPack)
